@@ -73,6 +73,14 @@ func (c *Creator) Create() error {
 		return err
 	}
 
+	// Apply Auth from config
+	if c.Config.Auth != "" {
+		authMgr := NewAuthManager(projectPath, c.DryRun)
+		if err := authMgr.AddAuth(); err != nil {
+			fmt.Printf("⚠️ Warning: auth setup failed: %v\n", err)
+		}
+	}
+
 	// Apply features from config
 	platform := NewPlatformManager(projectPath, c.DryRun)
 	for _, feature := range c.Config.Features {

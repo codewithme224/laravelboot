@@ -41,10 +41,21 @@ func (q *QualitySetup) Setup() error {
 		return err
 	}
 
+	// Run dump-autoload to ensure Pest commands are discovered
+	dumpCmd := exec.Command("composer", "dump-autoload")
+	dumpCmd.Dir = q.ProjectPath
+	_ = dumpCmd.Run()
+
 	cmd := exec.Command("php", "artisan", "pest:install", "--no-interaction")
 	cmd.Dir = q.ProjectPath
 	if output, err := cmd.CombinedOutput(); err != nil {
-		return fmt.Errorf("failed to initialize Pest: %v\nOutput: %s", err, string(output))
+		// If artisan fails, try vendor/bin/pest --init
+		fmt.Printf("⚠️ artisan pest:install failed, trying fallback: %v\n", err)
+		fallback := exec.Command("./vendor/bin/pest", "--init")
+		fallback.Dir = q.ProjectPath
+		if fOutput, fErr := fallback.CombinedOutput(); fErr != nil {
+			return fmt.Errorf("failed to initialize Pest: %v\nOutput: %s\nFallback Output: %s", fErr, string(output), string(fOutput))
+		}
 	}
 
 	return nil

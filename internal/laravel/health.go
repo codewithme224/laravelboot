@@ -3,6 +3,7 @@ package laravel
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 )
@@ -75,6 +76,16 @@ func (h *HealthSetup) registerRoute() error {
 	if h.DryRun {
 		fmt.Printf("[Dry Run] Would add health route to %s\n", path)
 		return nil
+	}
+
+	// Check if api.php exists (Laravel 11+ might not have it by default)
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		fmt.Println("📍 routes/api.php not found. Running php artisan install:api...")
+		cmd := exec.Command("php", "artisan", "install:api", "--no-interaction")
+		cmd.Dir = h.ProjectPath
+		if output, err := cmd.CombinedOutput(); err != nil {
+			return fmt.Errorf("failed to run install:api: %v\nOutput: %s", err, string(output))
+		}
 	}
 
 	content, err := os.ReadFile(path)
