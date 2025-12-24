@@ -15,9 +15,26 @@
 
 ## 🛠 Installation
 
+### Quick Install (macOS/Linux)
+
+```bash
+curl -sL https://raw.githubusercontent.com/codewithme224/laravelboot/main/install.sh | bash
+```
+
+### Manual Install
+
+1. Download the latest binary for your OS from the [Releases Page](https://github.com/codewithme224/laravelboot/releases).
+2. Extract the archive and move the `laravelboot` binary to your path:
+   ```bash
+   chmod +x laravelboot
+   sudo mv laravelboot /usr/local/bin/
+   ```
+
+### From Source
+
 1. Clone the repository:
    ```bash
-   git clone https://github.com/youruser/laravelboot.git
+   git clone https://github.com/codewithme224/laravelboot.git
    cd laravelboot
    ```
 2. Build the binary:
@@ -26,7 +43,7 @@
    ```
 3. (Optional) Move to your bin:
    ```bash
-   mv laravelboot /usr/local/bin/
+   sudo mv laravelboot /usr/local/bin/
    ```
 
 ---
