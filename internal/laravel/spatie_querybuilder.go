@@ -22,7 +22,7 @@ func (s *SpatieQueryBuilder) Install() error {
 		return nil
 	}
 
-	cmd := exec.Command("composer", "require", "spatie/laravel-query-builder")
+	cmd := exec.Command("composer", "require", "spatie/laravel-query-builder", "--with-all-dependencies")
 	cmd.Dir = s.ProjectPath
 	output, err := cmd.CombinedOutput()
 	if err != nil {

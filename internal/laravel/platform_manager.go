@@ -2,44 +2,39 @@ package laravel
 
 import (
 	"fmt"
-	"os"
 )
 
 type PlatformManager struct {
-	DryRun bool
+	ProjectPath string
+	DryRun      bool
 }
 
-func NewPlatformManager(dryRun bool) *PlatformManager {
-	return &PlatformManager{DryRun: dryRun}
+func NewPlatformManager(projectPath string, dryRun bool) *PlatformManager {
+	return &PlatformManager{ProjectPath: projectPath, DryRun: dryRun}
 }
 
 func (m *PlatformManager) RunStep(name string) error {
-	projectPath, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-
 	switch name {
 	case "roles":
-		return NewRolesSetup(projectPath, m.DryRun).Setup()
+		return NewRolesSetup(m.ProjectPath, m.DryRun).Setup()
 	case "media":
-		return NewMediaSetup(projectPath, m.DryRun).Setup()
+		return NewMediaSetup(m.ProjectPath, m.DryRun).Setup()
 	case "activity-log":
-		return NewActivityLogSetup(projectPath, m.DryRun).Setup()
+		return NewActivityLogSetup(m.ProjectPath, m.DryRun).Setup()
 	case "search":
-		return NewSearchSetup(projectPath, m.DryRun).Setup()
+		return NewSearchSetup(m.ProjectPath, m.DryRun).Setup()
 	case "platform":
 		fmt.Println("🚀 Installing complete platform stack...")
-		if err := NewRolesSetup(projectPath, m.DryRun).Setup(); err != nil {
+		if err := NewRolesSetup(m.ProjectPath, m.DryRun).Setup(); err != nil {
 			return err
 		}
-		if err := NewMediaSetup(projectPath, m.DryRun).Setup(); err != nil {
+		if err := NewMediaSetup(m.ProjectPath, m.DryRun).Setup(); err != nil {
 			return err
 		}
-		if err := NewActivityLogSetup(projectPath, m.DryRun).Setup(); err != nil {
+		if err := NewActivityLogSetup(m.ProjectPath, m.DryRun).Setup(); err != nil {
 			return err
 		}
-		if err := NewSearchSetup(projectPath, m.DryRun).Setup(); err != nil {
+		if err := NewSearchSetup(m.ProjectPath, m.DryRun).Setup(); err != nil {
 			return err
 		}
 		return nil

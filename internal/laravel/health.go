@@ -61,6 +61,12 @@ class HealthController extends Controller
 		fmt.Printf("[Dry Run] Would create HealthController: %s\n", path)
 		return nil
 	}
+
+	dir := filepath.Dir(path)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return fmt.Errorf("failed to create directory %s: %v", dir, err)
+	}
+
 	return os.WriteFile(path, []byte(content), 0644)
 }
 

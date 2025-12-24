@@ -23,7 +23,7 @@ func (a *ActivityLogSetup) Setup() error {
 	}
 
 	fmt.Println("📝 Installing spatie/laravel-activitylog...")
-	cmd := exec.Command("composer", "require", "spatie/laravel-activitylog")
+	cmd := exec.Command("composer", "require", "spatie/laravel-activitylog", "--with-all-dependencies")
 	cmd.Dir = a.ProjectPath
 	if output, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("failed to install spatie/laravel-activitylog: %v\nOutput: %s", err, string(output))

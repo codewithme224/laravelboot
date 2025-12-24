@@ -2,49 +2,44 @@ package laravel
 
 import (
 	"fmt"
-	"os"
 )
 
 type EnterpriseManager struct {
-	DryRun bool
+	ProjectPath string
+	DryRun      bool
 }
 
-func NewEnterpriseManager(dryRun bool) *EnterpriseManager {
-	return &EnterpriseManager{DryRun: dryRun}
+func NewEnterpriseManager(projectPath string, dryRun bool) *EnterpriseManager {
+	return &EnterpriseManager{ProjectPath: projectPath, DryRun: dryRun}
 }
 
 func (m *EnterpriseManager) RunStep(name string) error {
-	projectPath, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-
 	switch name {
 	case "quality":
-		return NewQualitySetup(projectPath, m.DryRun).Setup()
+		return NewQualitySetup(m.ProjectPath, m.DryRun).Setup()
 	case "pro-arch":
-		return NewProArchSetup(projectPath, m.DryRun).Setup()
+		return NewProArchSetup(m.ProjectPath, m.DryRun).Setup()
 	case "docs-pro":
-		return NewDocsProSetup(projectPath, m.DryRun).Setup()
+		return NewDocsProSetup(m.ProjectPath, m.DryRun).Setup()
 	case "ci":
-		return NewCicdSetup(projectPath, m.DryRun).Setup()
+		return NewCicdSetup(m.ProjectPath, m.DryRun).Setup()
 	case "monitoring":
-		return NewMonitoringSetup(projectPath, m.DryRun).Setup()
+		return NewMonitoringSetup(m.ProjectPath, m.DryRun).Setup()
 	case "enterprise":
 		fmt.Println("👑 Installing complete Enterprise stack...")
-		if err := NewQualitySetup(projectPath, m.DryRun).Setup(); err != nil {
+		if err := NewQualitySetup(m.ProjectPath, m.DryRun).Setup(); err != nil {
 			return err
 		}
-		if err := NewProArchSetup(projectPath, m.DryRun).Setup(); err != nil {
+		if err := NewProArchSetup(m.ProjectPath, m.DryRun).Setup(); err != nil {
 			return err
 		}
-		if err := NewDocsProSetup(projectPath, m.DryRun).Setup(); err != nil {
+		if err := NewDocsProSetup(m.ProjectPath, m.DryRun).Setup(); err != nil {
 			return err
 		}
-		if err := NewCicdSetup(projectPath, m.DryRun).Setup(); err != nil {
+		if err := NewCicdSetup(m.ProjectPath, m.DryRun).Setup(); err != nil {
 			return err
 		}
-		if err := NewMonitoringSetup(projectPath, m.DryRun).Setup(); err != nil {
+		if err := NewMonitoringSetup(m.ProjectPath, m.DryRun).Setup(); err != nil {
 			return err
 		}
 		return nil

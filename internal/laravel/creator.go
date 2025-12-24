@@ -5,6 +5,7 @@ import (
 	"laravelboot/internal/config"
 	"laravelboot/internal/docs"
 	"laravelboot/internal/plugins"
+	"laravelboot/internal/presets"
 	"os"
 )
 
@@ -14,11 +15,15 @@ type Creator struct {
 	Config *config.Config
 }
 
-func NewCreator(name string, dryRun bool) *Creator {
+func NewCreator(name string, preset string, dryRun bool) *Creator {
 	// Try to load config if it exists
 	conf, _ := config.LoadConfig(".laravelboot.yaml")
 	if conf == nil {
-		conf = config.DefaultConfig()
+		if preset != "" {
+			conf = presets.GetPreset(preset)
+		} else {
+			conf = config.DefaultConfig()
+		}
 	}
 	conf.ProjectName = name
 
@@ -69,7 +74,7 @@ func (c *Creator) Create() error {
 	}
 
 	// Apply features from config
-	platform := NewPlatformManager(c.DryRun)
+	platform := NewPlatformManager(projectPath, c.DryRun)
 	for _, feature := range c.Config.Features {
 		fmt.Printf("📦 Adding feature: %s\n", feature)
 		if err := platform.RunStep(feature); err != nil {
@@ -78,7 +83,7 @@ func (c *Creator) Create() error {
 	}
 
 	// Apply infra from config
-	infra := NewInfraManager(c.DryRun)
+	infra := NewInfraManager(projectPath, c.DryRun)
 	for _, step := range c.Config.Infra {
 		fmt.Printf("🛡️ Adding infra: %s\n", step)
 		if err := infra.RunStep(step); err != nil {
@@ -87,7 +92,7 @@ func (c *Creator) Create() error {
 	}
 
 	// Apply enterprise from config
-	enterprise := NewEnterpriseManager(c.DryRun)
+	enterprise := NewEnterpriseManager(projectPath, c.DryRun)
 	for _, step := range c.Config.Enterprise {
 		fmt.Printf("👑 Adding enterprise feature: %s\n", step)
 		if err := enterprise.RunStep(step); err != nil {

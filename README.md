@@ -66,7 +66,14 @@ Create a complete API project based on your config or defaults:
 laravelboot new my-api-project
 ```
 
-### 3. Add Features Incrementally
+### 3. Utility Commands
+
+```bash
+laravelboot version         # Show current version
+laravelboot update          # Self-update to the latest version
+```
+
+### 4. Add Features Incrementally
 
 You can add specific stacks to an existing project:
 

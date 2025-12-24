@@ -2,44 +2,39 @@ package laravel
 
 import (
 	"fmt"
-	"os"
 )
 
 type InfraManager struct {
-	DryRun bool
+	ProjectPath string
+	DryRun      bool
 }
 
-func NewInfraManager(dryRun bool) *InfraManager {
-	return &InfraManager{DryRun: dryRun}
+func NewInfraManager(projectPath string, dryRun bool) *InfraManager {
+	return &InfraManager{ProjectPath: projectPath, DryRun: dryRun}
 }
 
 func (m *InfraManager) RunStep(name string) error {
-	projectPath, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-
 	switch name {
 	case "docker":
-		return NewDockerSetup(projectPath, m.DryRun).Setup()
+		return NewDockerSetup(m.ProjectPath, m.DryRun).Setup()
 	case "security":
-		return NewSecuritySetup(projectPath, m.DryRun).Setup()
+		return NewSecuritySetup(m.ProjectPath, m.DryRun).Setup()
 	case "rate-limit":
-		return NewRateLimitSetup(projectPath, m.DryRun).Setup()
+		return NewRateLimitSetup(m.ProjectPath, m.DryRun).Setup()
 	case "health":
-		return NewHealthSetup(projectPath, m.DryRun).Setup()
+		return NewHealthSetup(m.ProjectPath, m.DryRun).Setup()
 	case "infra":
 		fmt.Println("🚀 Hardening infrastructure and security...")
-		if err := NewDockerSetup(projectPath, m.DryRun).Setup(); err != nil {
+		if err := NewDockerSetup(m.ProjectPath, m.DryRun).Setup(); err != nil {
 			return err
 		}
-		if err := NewSecuritySetup(projectPath, m.DryRun).Setup(); err != nil {
+		if err := NewSecuritySetup(m.ProjectPath, m.DryRun).Setup(); err != nil {
 			return err
 		}
-		if err := NewRateLimitSetup(projectPath, m.DryRun).Setup(); err != nil {
+		if err := NewRateLimitSetup(m.ProjectPath, m.DryRun).Setup(); err != nil {
 			return err
 		}
-		if err := NewHealthSetup(projectPath, m.DryRun).Setup(); err != nil {
+		if err := NewHealthSetup(m.ProjectPath, m.DryRun).Setup(); err != nil {
 			return err
 		}
 		return nil

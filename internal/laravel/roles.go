@@ -24,7 +24,7 @@ func (r *RolesSetup) Setup() error {
 	}
 
 	fmt.Println("🔑 Installing spatie/laravel-permission...")
-	cmd := exec.Command("composer", "require", "spatie/laravel-permission")
+	cmd := exec.Command("composer", "require", "spatie/laravel-permission", "--with-all-dependencies")
 	cmd.Dir = r.ProjectPath
 	if output, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("failed to install spatie/laravel-permission: %v\nOutput: %s", err, string(output))

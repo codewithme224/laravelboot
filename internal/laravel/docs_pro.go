@@ -21,7 +21,7 @@ func (d *DocsProSetup) Setup() error {
 	}
 
 	fmt.Println("📚 Installing dedoc/scramble...")
-	cmd := exec.Command("composer", "require", "dedoc/scramble")
+	cmd := exec.Command("composer", "require", "dedoc/scramble", "--with-all-dependencies")
 	cmd.Dir = d.ProjectPath
 	if output, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("failed to install Scramble: %v\nOutput: %s", err, string(output))

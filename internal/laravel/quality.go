@@ -55,6 +55,7 @@ func (q *QualitySetup) runComposerRequire(packages string, dev bool) error {
 	if dev {
 		args = append(args, "--dev")
 	}
+	args = append(args, "--with-all-dependencies")
 	// Split packages if multiple are provided
 	packageList := strings.Fields(packages)
 

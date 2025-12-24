@@ -21,14 +21,14 @@ func (s *SearchSetup) Setup() error {
 	}
 
 	fmt.Println("🔍 Installing laravel/scout...")
-	cmd := exec.Command("composer", "require", "laravel/scout")
+	cmd := exec.Command("composer", "require", "laravel/scout", "--with-all-dependencies")
 	cmd.Dir = s.ProjectPath
 	if output, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("failed to install laravel/scout: %v\nOutput: %s", err, string(output))
 	}
 
 	fmt.Println("🔍 Installing typesense/typesense-php and dev-it-me/laravel-scout-typesense-driver...")
-	cmd = exec.Command("composer", "require", "typesense/typesense-php", "dev-it-me/laravel-scout-typesense-driver")
+	cmd = exec.Command("composer", "require", "typesense/typesense-php", "dev-it-me/laravel-scout-typesense-driver", "--with-all-dependencies")
 	cmd.Dir = s.ProjectPath
 	if output, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("failed to install typesense driver: %v\nOutput: %s", err, string(output))

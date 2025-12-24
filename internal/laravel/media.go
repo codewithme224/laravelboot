@@ -21,7 +21,7 @@ func (m *MediaSetup) Setup() error {
 	}
 
 	fmt.Println("🖼️ Installing spatie/laravel-medialibrary...")
-	cmd := exec.Command("composer", "require", "spatie/laravel-medialibrary")
+	cmd := exec.Command("composer", "require", "spatie/laravel-medialibrary", "--with-all-dependencies")
 	cmd.Dir = m.ProjectPath
 	if output, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("failed to install spatie/laravel-medialibrary: %v\nOutput: %s", err, string(output))

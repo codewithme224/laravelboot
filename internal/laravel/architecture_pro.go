@@ -23,7 +23,7 @@ func (p *ProArchSetup) Setup() error {
 	}
 
 	fmt.Println("🏗️ Installing spatie/laravel-data...")
-	cmd := exec.Command("composer", "require", "spatie/laravel-data")
+	cmd := exec.Command("composer", "require", "spatie/laravel-data", "--with-all-dependencies")
 	cmd.Dir = p.ProjectPath
 	if output, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("failed to install spatie/laravel-data: %v\nOutput: %s", err, string(output))

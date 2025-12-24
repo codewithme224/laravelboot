@@ -21,7 +21,7 @@ func (m *MonitoringSetup) Setup() error {
 	}
 
 	fmt.Println("🔭 Installing Laravel Telescope...")
-	cmd := exec.Command("composer", "require", "laravel/telescope", "--dev")
+	cmd := exec.Command("composer", "require", "laravel/telescope", "--dev", "--with-all-dependencies")
 	cmd.Dir = m.ProjectPath
 	if output, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("failed to install Telescope: %v\nOutput: %s", err, string(output))
@@ -34,7 +34,7 @@ func (m *MonitoringSetup) Setup() error {
 	}
 
 	fmt.Println("📈 Installing Laravel Pulse...")
-	cmd = exec.Command("composer", "require", "laravel/pulse")
+	cmd = exec.Command("composer", "require", "laravel/pulse", "--with-all-dependencies")
 	cmd.Dir = m.ProjectPath
 	if output, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("failed to install Pulse: %v\nOutput: %s", err, string(output))
