@@ -48,7 +48,29 @@ curl -sL https://raw.githubusercontent.com/codewithme224/laravelboot/main/instal
 
 ---
 
-## 🚀 Usage
+## � Updating
+
+To keep your CLI tool up to date with the latest features and security fixes:
+
+### Modern Versions (v1.0.0+)
+
+Simply run:
+
+```bash
+laravelboot update
+```
+
+### Older Versions (< v1.0.0)
+
+If you are on an older version that doesn't support the `update` command, run the install script again to perform a manual upgrade:
+
+```bash
+curl -sL https://raw.githubusercontent.com/codewithme224/laravelboot/main/install.sh | bash
+```
+
+---
+
+## �🚀 Usage
 
 ### 1. Interactive Initialize
 
