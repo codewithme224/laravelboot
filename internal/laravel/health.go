@@ -1,0 +1,85 @@
+package laravel
+
+import (
+	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+)
+
+type HealthSetup struct {
+	ProjectPath string
+	DryRun      bool
+}
+
+func NewHealthSetup(projectPath string, dryRun bool) *HealthSetup {
+	return &HealthSetup{ProjectPath: projectPath, DryRun: dryRun}
+}
+
+func (h *HealthSetup) Setup() error {
+	if err := h.createHealthController(); err != nil {
+		return err
+	}
+	if err := h.registerRoute(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (h *HealthSetup) createHealthController() error {
+	content := `<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+
+class HealthController extends Controller
+{
+    public function check(): JsonResponse
+    {
+        try {
+            DB::connection()->getPdo();
+            return response()->json([
+                'status' => 'ok',
+                'database' => 'connected',
+                'timestamp' => now()->toIso8601String(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'database' => 'disconnected',
+                'message' => $e->getMessage(),
+            ], 503);
+        }
+    }
+}
+`
+	path := filepath.Join(h.ProjectPath, "app/Http/Controllers/Api/HealthController.php")
+	if h.DryRun {
+		fmt.Printf("[Dry Run] Would create HealthController: %s\n", path)
+		return nil
+	}
+	return os.WriteFile(path, []byte(content), 0644)
+}
+
+func (h *HealthSetup) registerRoute() error {
+	path := filepath.Join(h.ProjectPath, "routes/api.php")
+	if h.DryRun {
+		fmt.Printf("[Dry Run] Would add health route to %s\n", path)
+		return nil
+	}
+
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return err
+	}
+
+	route := "\nRoute::get('/health', [\\App\\Http\\Controllers\\Api\\HealthController::class, 'check']);\n"
+	if !strings.Contains(string(content), "/health") {
+		newContent := string(content) + route
+		return os.WriteFile(path, []byte(newContent), 0644)
+	}
+	return nil
+}
