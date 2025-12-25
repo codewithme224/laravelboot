@@ -108,16 +108,26 @@ laravelboot add auth        # Sanctum + Base Auth Controller
 #### Platform Features
 
 ```bash
-laravelboot add roles       # Spatie Permissions
-laravelboot add media       # Spatie MediaLibrary + SpatieMediaService
-laravelboot add search      # Laravel Scout + Typesense
-laravelboot add activity    # Spatie ActivityLog
-laravelboot add reporting   # Excel (Maatwebsite) + PDF (dompdf)
-laravelboot add traits      # Common API traits (Api, HandlesPagination, Auditable)
-laravelboot add middleware  # DBTransaction + ForceJson middleware
-laravelboot add exports     # Base Export/Import classes for Excel
-laravelboot add jobs        # Base Job class with queue support
-laravelboot add platform    # All of the above
+laravelboot add roles         # Spatie Permissions
+laravelboot add media         # Spatie MediaLibrary + SpatieMediaService
+laravelboot add search        # Laravel Scout + Typesense
+laravelboot add activity      # Spatie ActivityLog
+laravelboot add reporting     # Excel (Maatwebsite) + PDF (dompdf)
+laravelboot add traits        # Common API traits (Api, HandlesPagination, Auditable)
+laravelboot add middleware    # DBTransaction + ForceJson middleware
+laravelboot add exports       # Base Export/Import classes for Excel
+laravelboot add jobs          # Base Job class with queue support
+laravelboot add rules         # Custom validation rules (Base64Image, PhoneNumber, etc.)
+laravelboot add responses     # API response helpers + Exception handler
+laravelboot add notifications # Notifications system with services
+laravelboot add scheduler     # Console commands + scheduling
+laravelboot add cache         # Caching layer with Redis + Cacheable trait
+laravelboot add versioning    # API versioning (v1, v2 structure)
+laravelboot add softdeletes   # Soft deletes + Trash management
+laravelboot add storage       # File storage service + controller
+laravelboot add events        # Events & Listeners scaffolding
+laravelboot add logging       # Request logging + Slack notifications
+laravelboot add platform      # All of the above
 ```
 
 #### Infrastructure & Security
