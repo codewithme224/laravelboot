@@ -46,22 +46,34 @@ use Illuminate\Http\Client\Response;
 
 trait Api
 {
-    protected function get(string $url, array $query = [], array $headers = []): Response
+    /**
+     * @return \Illuminate\Http\Client\Response
+     */
+    protected function get(string $url, array $query = [], array $headers = [])
     {
         return Http::withHeaders($this->mergeHeaders($headers))->get($url, $query);
     }
 
-    protected function post(string $url, array $data = [], array $headers = []): Response
+    /**
+     * @return \Illuminate\Http\Client\Response
+     */
+    protected function post(string $url, array $data = [], array $headers = [])
     {
         return Http::withHeaders($this->mergeHeaders($headers))->post($url, $data);
     }
 
-    protected function put(string $url, array $data = [], array $headers = []): Response
+    /**
+     * @return \Illuminate\Http\Client\Response
+     */
+    protected function put(string $url, array $data = [], array $headers = [])
     {
         return Http::withHeaders($this->mergeHeaders($headers))->put($url, $data);
     }
 
-    protected function delete(string $url, array $data = [], array $headers = []): Response
+    /**
+     * @return \Illuminate\Http\Client\Response
+     */
+    protected function delete(string $url, array $data = [], array $headers = [])
     {
         return Http::withHeaders($this->mergeHeaders($headers))->delete($url, $data);
     }

@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-const VERSION = "v1.0.4"
+const VERSION = "v1.0.5"
 
 func main() {
 	var dryRun bool
@@ -102,7 +102,7 @@ func main() {
 				fmt.Fprintf(os.Stderr, "❌ Error: %v\n", err)
 				os.Exit(1)
 			}
-		case "roles", "media", "activity-log", "search", "reporting", "traits", "middleware", "exports", "jobs", "rules", "responses", "notifications", "scheduler", "cache", "versioning", "softdeletes", "storage", "events", "logging", "platform":
+		case "roles", "media", "activity", "activity-log", "search", "reporting", "traits", "middleware", "exports", "jobs", "rules", "responses", "notifications", "scheduler", "cache", "versioning", "softdeletes", "storage", "events", "logging", "platform":
 			manager := laravel.NewPlatformManager(cwd, dryRun)
 			if err := manager.RunStep(target); err != nil {
 				fmt.Fprintf(os.Stderr, "❌ Error: %v\n", err)

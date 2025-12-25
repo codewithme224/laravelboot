@@ -19,7 +19,7 @@ func (m *PlatformManager) RunStep(name string) error {
 		return NewRolesSetup(m.ProjectPath, m.DryRun).Setup()
 	case "media":
 		return NewMediaSetup(m.ProjectPath, m.DryRun).Setup()
-	case "activity-log":
+	case "activity", "activity-log":
 		return NewActivityLogSetup(m.ProjectPath, m.DryRun).Setup()
 	case "search":
 		return NewSearchSetup(m.ProjectPath, m.DryRun).Setup()

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 type VersioningSetup struct {
@@ -17,7 +18,7 @@ func NewVersioningSetup(projectPath string, dryRun bool) *VersioningSetup {
 
 func (v *VersioningSetup) Setup() error {
 	if v.DryRun {
-		fmt.Printf("[Dry Run] Would setup API versioning\n")
+		fmt.Printf("[Dry Run] Would setup API versioning app structure\n")
 		return nil
 	}
 
@@ -38,7 +39,10 @@ func (v *VersioningSetup) Setup() error {
 	if err := v.createV2Controller(); err != nil {
 		return err
 	}
-	if err := v.createVersionedRoutes(); err != nil {
+	if err := v.updateBootstrapApp(); err != nil {
+		return err
+	}
+	if err := v.updateApiRoutes(); err != nil {
 		return err
 	}
 
@@ -61,28 +65,6 @@ abstract class BaseApiController extends Controller
      * Get the API version.
      */
     abstract protected function version(): string;
-
-    /**
-     * Get deprecation notice if applicable.
-     */
-    protected function deprecationNotice(): ?string
-    {
-        return null;
-    }
-
-    /**
-     * Add version headers to response.
-     */
-    protected function withVersionHeaders($response)
-    {
-        $response->header('X-API-Version', $this->version());
-        
-        if ($notice = $this->deprecationNotice()) {
-            $response->header('X-API-Deprecated', $notice);
-        }
-
-        return $response;
-    }
 }
 `
 	dir := filepath.Join(v.ProjectPath, "app/Http/Controllers/Api")
@@ -103,15 +85,6 @@ abstract class V1Controller extends BaseApiController
     {
         return 'v1';
     }
-
-    /**
-     * V1 is deprecated, clients should migrate to V2.
-     * Remove this method if V1 is still the current version.
-     */
-    // protected function deprecationNotice(): ?string
-    // {
-    //     return 'API v1 is deprecated. Please migrate to v2 by 2025-06-01.';
-    // }
 }
 `
 	path := filepath.Join(v.ProjectPath, "app/Http/Controllers/Api/V1/V1Controller.php")
@@ -137,50 +110,68 @@ abstract class V2Controller extends BaseApiController
 	return os.WriteFile(path, []byte(content), 0644)
 }
 
-func (v *VersioningSetup) createVersionedRoutes() error {
+func (v *VersioningSetup) updateBootstrapApp() error {
+	path := filepath.Join(v.ProjectPath, "bootstrap/app.php")
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return err
+	}
+
+	text := string(content)
+	if !strings.Contains(text, "apiPrefix:") {
+		// Look for the api route definition
+		target := "api: __DIR__ . '/../routes/api.php',"
+		replacement := "api: __DIR__ . '/../routes/api.php',\n        apiPrefix: 'api/v1',"
+
+		newText := strings.Replace(text, target, replacement, 1)
+		if newText == text {
+			// Try without comma just in case
+			target = "api: __DIR__ . '/../routes/api.php'"
+			replacement = "api: __DIR__ . '/../routes/api.php',\n        apiPrefix: 'api/v1'"
+			newText = strings.Replace(text, target, replacement, 1)
+		}
+
+		if newText != text {
+			return os.WriteFile(path, []byte(newText), 0644)
+		}
+		fmt.Println("⚠️ Could not automatically inject apiPrefix in bootstrap/app.php")
+	}
+
+	return nil
+}
+
+func (v *VersioningSetup) updateApiRoutes() error {
 	content := `<?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| API V1 Routes
+| API Routes
 |--------------------------------------------------------------------------
 |
-| Routes for API version 1. These may be deprecated in favor of V2.
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "api" middleware group. Make something great!
 |
 */
 
-Route::prefix('v1')->name('v1.')->group(function () {
+// V1 Routes (Pre-fixed with api/v1 in bootstrap/app.php)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+    
     // Add your V1 routes here
     // Route::apiResource('users', \App\Http\Controllers\Api\V1\UserController::class);
 });
 
-/*
-|--------------------------------------------------------------------------
-| API V2 Routes
-|--------------------------------------------------------------------------
-|
-| Routes for API version 2 (current version).
-|
-*/
-
-Route::prefix('v2')->name('v2.')->group(function () {
-    // Add your V2 routes here
-    // Route::apiResource('users', \App\Http\Controllers\Api\V2\UserController::class);
+// Health check route
+Route::get('/health', function () {
+    return response()->json(['status' => 'ok']);
 });
-
-/*
-|--------------------------------------------------------------------------
-| Latest API Routes (Alias to current version)
-|--------------------------------------------------------------------------
-|
-| Routes without version prefix that point to the latest API version.
-|
-*/
-
-// Route::apiResource('users', \App\Http\Controllers\Api\V2\UserController::class);
 `
-	path := filepath.Join(v.ProjectPath, "routes/api_versioned.php")
+	path := filepath.Join(v.ProjectPath, "routes/api.php")
 	return os.WriteFile(path, []byte(content), 0644)
 }
