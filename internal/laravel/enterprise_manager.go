@@ -25,6 +25,10 @@ func (m *EnterpriseManager) RunStep(name string) error {
 		return NewCicdSetup(m.ProjectPath, m.DryRun).Setup()
 	case "monitoring":
 		return NewMonitoringSetup(m.ProjectPath, m.DryRun).Setup()
+	case "tenancy":
+		return NewTenancySetup(m.ProjectPath, m.DryRun).Setup()
+	case "helpers":
+		return NewHelpersSetup(m.ProjectPath, m.DryRun).Setup()
 	case "enterprise":
 		fmt.Println("👑 Installing complete Enterprise stack...")
 		if err := NewQualitySetup(m.ProjectPath, m.DryRun).Setup(); err != nil {
@@ -40,6 +44,9 @@ func (m *EnterpriseManager) RunStep(name string) error {
 			return err
 		}
 		if err := NewMonitoringSetup(m.ProjectPath, m.DryRun).Setup(); err != nil {
+			return err
+		}
+		if err := NewHelpersSetup(m.ProjectPath, m.DryRun).Setup(); err != nil {
 			return err
 		}
 		return nil

@@ -16,6 +16,13 @@ func NewCicdSetup(projectPath string, dryRun bool) *CicdSetup {
 }
 
 func (c *CicdSetup) Setup() error {
+	if err := c.SetupGitHub(); err != nil {
+		return err
+	}
+	return c.SetupGitLab()
+}
+
+func (c *CicdSetup) SetupGitHub() error {
 	content := `name: CI
 
 on:
@@ -58,5 +65,35 @@ jobs:
 
 	os.MkdirAll(dir, 0755)
 	path := filepath.Join(dir, "ci.yml")
+	return os.WriteFile(path, []byte(content), 0644)
+}
+
+func (c *CicdSetup) SetupGitLab() error {
+	content := `image: php:8.3
+
+cache:
+  paths:
+    - vendor/
+
+before_script:
+  - apt-get update -yqq
+  - apt-get install -yqq libzip-dev zip unzip
+  - docker-php-ext-install zip
+  - curl -sS https://getcomposer.org/installer | php
+  - php composer.phar install
+
+test:
+  script:
+    - cp .env.example .env
+    - php artisan key:generate
+    - vendor/bin/phpunit
+    - vendor/bin/pint --test
+`
+	path := filepath.Join(c.ProjectPath, ".gitlab-ci.yml")
+	if c.DryRun {
+		fmt.Printf("[Dry Run] Would create GitLab CI configuration: %s\n", path)
+		return nil
+	}
+
 	return os.WriteFile(path, []byte(content), 0644)
 }

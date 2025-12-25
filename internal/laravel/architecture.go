@@ -24,6 +24,11 @@ func (a *Architecture) SetupFolders() error {
 		"app/Domain/Users/Models",
 		"app/Domain/Users/Resources",
 		"app/Domain/Users/QueryBuilders",
+		"app/Enums",
+		"app/Services",
+		"app/Traits",
+		"app/Rules",
+		"app/Observers",
 	}
 
 	for _, dir := range dirs {
