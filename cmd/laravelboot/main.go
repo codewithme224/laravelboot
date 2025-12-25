@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-const VERSION = "v1.0.3"
+const VERSION = "v1.0.4"
 
 func main() {
 	var dryRun bool
