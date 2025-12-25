@@ -135,7 +135,7 @@ laravelboot add infra       # All of the above
 ```bash
 laravelboot add quality     # Pint + PHPStan + Pest
 laravelboot add docs-pro    # Automated Swagger (Scramble)
-laravelboot add monitoring  # Telescope + Pulse
+laravelboot add monitoring  # Laravel Pulse for monitoring
 laravelboot add ci          # GitHub Actions + GitLab CI Workflows
 laravelboot add tenancy     # Multi-tenancy (stancl/tenancy)
 laravelboot add helpers     # Global helpers.php with auto-registration
