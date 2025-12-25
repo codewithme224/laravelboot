@@ -109,9 +109,14 @@ laravelboot add auth        # Sanctum + Base Auth Controller
 
 ```bash
 laravelboot add roles       # Spatie Permissions
-laravelboot add media       # Spatie MediaLibrary
+laravelboot add media       # Spatie MediaLibrary + SpatieMediaService
 laravelboot add search      # Laravel Scout + Typesense
 laravelboot add activity    # Spatie ActivityLog
+laravelboot add reporting   # Excel (Maatwebsite) + PDF (dompdf)
+laravelboot add traits      # Common API traits (Api, HandlesPagination, Auditable)
+laravelboot add middleware  # DBTransaction + ForceJson middleware
+laravelboot add exports     # Base Export/Import classes for Excel
+laravelboot add jobs        # Base Job class with queue support
 laravelboot add platform    # All of the above
 ```
 
@@ -131,7 +136,9 @@ laravelboot add infra       # All of the above
 laravelboot add quality     # Pint + PHPStan + Pest
 laravelboot add docs-pro    # Automated Swagger (Scramble)
 laravelboot add monitoring  # Telescope + Pulse
-laravelboot add ci          # GitHub Actions CI Workflow
+laravelboot add ci          # GitHub Actions + GitLab CI Workflows
+laravelboot add tenancy     # Multi-tenancy (stancl/tenancy)
+laravelboot add helpers     # Global helpers.php with auto-registration
 laravelboot add enterprise  # All of the above
 ```
 
@@ -155,6 +162,11 @@ features:
   - roles
   - search
   - activity-log
+  - reporting
+  - traits
+  - middleware
+  - exports
+  - jobs
 infra:
   - docker
   - security
@@ -163,6 +175,8 @@ enterprise:
   - quality
   - ci
   - docs-pro
+  - tenancy
+  - helpers
 architecture: domain-based
 ```
 
